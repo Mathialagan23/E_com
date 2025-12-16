@@ -1,0 +1,20 @@
+{
+  "name": "e-com",
+  "version": "1.0.0",
+  "description": "ecom using mern stack",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon backend/server.js",
+    "dev":"set NODE_ENV=development&& nodemon backend/server.js",
+    "prod":"set NODE_ENV=production&& nodemon backend/server.js",
+    "seeder": "node backend/utils/seeder.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.1",
+    "nodemon": "^3.1.10"
+  }
+}
