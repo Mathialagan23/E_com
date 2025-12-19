@@ -22,8 +22,7 @@ exports.newProduct = catchAsyncError(async (req, res, next)=>{
 }) 
 
 //get single product
-exports.getSingleProduct = async (req, res, next) => {
-    try {
+exports.getSingleProduct = catchAsyncError( async (req, res, next) => {
         const product = await Product.findById(req.params.id);
 
         if (!product) {
@@ -35,13 +34,7 @@ exports.getSingleProduct = async (req, res, next) => {
             product
         });
 
-    } catch (error) {
-        res.status(400).json({
-            success: false,
-            message: "Invalid product ID"
-        });
-    }
-};
+})
 
 //update product - api/v1/products/:id
 exports.updateProduct = async (req, res, next) => {
