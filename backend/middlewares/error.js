@@ -2,6 +2,16 @@ const ErrorHandler = require("../utils/errorHandler");
 
 module.exports = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
+    
+    // Normalize common mongoose errors for both environments
+    if (err.name === 'CastError') {
+        err.message = `Resource not found: ${err.path}`;
+        err.statusCode = 400;
+    }
+    if (err.name === 'ValidationError') {
+        err.message = Object.values(err.errors).map(value => value.message).join(', ');
+        err.statusCode = 400;
+    }
 
     if (process.env.NODE_ENV == 'development') {
         res.status(err.statusCode).json({
@@ -17,9 +27,10 @@ module.exports = (err, req, res, next) => {
         let error = new Error(message);
 
 
-        if (err.name == "ValidatorError"){
-            message = Object.values(err.errors).map(value => value.message)
+        if (err.name === "ValidationError"){
+            message = Object.values(err.errors).map(value => value.message).join(', ');
             error = new Error(message);
+            error.statusCode = 400;
         }
 
         if (err.name == 'CastError'){
@@ -32,22 +43,7 @@ module.exports = (err, req, res, next) => {
     })
     }
 
-    // if (process.env.NODE_ENV === "production") {
-    //     let error = {
-    //         statusCode: err.statusCode || 500,
-    //         message: err.message || "Internal Server Error"
-    //     };
-
-    //     if (err.name === "ValidationError") {
-    //         error.message = Object.values(err.errors).map(val => val.message);
-    //         error.statusCode = 400;
-    //     }
-
-    //     res.status(error.statusCode).json({
-    //         success: false,
-    //         message: error.message
-    //     });
-    // }
+    
 
 
 
